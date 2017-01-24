@@ -1,71 +1,36 @@
-#include "task.h"
-#include "task_scheduler.h"
-#include "utils.h"
 #include <avr/io.h>
-#include "uart.h"
-#include "button.h"
-#include "led.h"
-
-int val = 0;
-
-Task toggleRedLedTask;
-Task toggleBlueLedTask;
-Task checkButtonTask;
-Button *button;
-Led *redLed;
-Led *blueLed;
-
-void toggle_red_led(){
-	bit_toggle(redLed->connection->port,redLed->connection->id);
+#include <avr/interrupt.h>
+#include "timer.h"
+  
+// TIMER0 overflow interrupt service routine
+// called whenever TCNT0 overflows
+ISR(TIMER0_OVF_vect)
+{
+    // keep a track of number of overflows
+    tot_overflow++;
 }
-
-void toggle_blue_led(){
-	bit_toggle(blueLed->connection->port,blueLed->connection->id);
-}
-
-void check_button(){
-	if(BUTTON_pressed(button)){
-		toggleRedLedTask.enabled = 1;
-		toggleBlueLedTask.enabled = 0;
-		printf("Button pressed\n");
-	} else {
-		toggleRedLedTask.enabled = 0;
-		toggleBlueLedTask.enabled = 1;
-		printf("Button released\n");
-	}
-}
-
-void init(){
-	toggleRedLedTask.delay = 0;
-	toggleRedLedTask.enabled = 1;
-	toggleRedLedTask.interval = 300;
-	toggleRedLedTask.handler = &toggle_red_led;
-
-	toggleBlueLedTask.delay = 0;
-	toggleBlueLedTask.enabled = 1;
-	toggleBlueLedTask.interval = 600;
-	toggleBlueLedTask.handler = &toggle_blue_led;
-
-	checkButtonTask.delay = 0;
-	checkButtonTask.enabled = 1;
-	checkButtonTask.interval = 50;
-	checkButtonTask.handler = &check_button;
-
-	button = BUTTON_create(GPIO_create(&DDRB, &PORTB, &PINB, 0));
-	redLed = LED_create(GPIO_create(&DDRB, &PORTB, &PINB, 3));
-	blueLed = LED_create(GPIO_create(&DDRB, &PORTB, &PINB, 7));
-}
-
-int main(){
-	UART_init();
-	init();
-	TASK_SCHEDULER_start();
-
-	TASK_SCHEDULER_add(&toggleRedLedTask);
-	TASK_SCHEDULER_add(&checkButtonTask);
-	TASK_SCHEDULER_add(&toggleBlueLedTask);
-
-	while(1){}
-
-	return 0;
+  
+int main(void)
+{
+    // connect led to pin PC0
+    DDRA |= (1 << 0);
+  
+    // initialize timer
+     timer0_init();
+  
+    // loop forever
+    while(1)
+    {
+        // check if no. of overflows = 12
+        if (tot_overflow >= 12)  // NOTE: '>=' is used
+        {
+            // check if the timer count reaches 53
+            if (TCNT0 >= 53)
+            {
+                PORTA ^= (1 << PINA0);    // toggles the led
+                TCNT0 = 0;            // reset counter
+                tot_overflow = 0;     // reset overflow counter
+            }
+        }
+    }
 }

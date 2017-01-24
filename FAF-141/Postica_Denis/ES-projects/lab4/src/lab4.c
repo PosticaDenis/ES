@@ -1,64 +1,37 @@
+#define F_CPU 8000000ul
 #include <avr/io.h>
-#include <avr/delay.h>
-#include "hbridge.h"
-#include "uart_stdio.h"
-#include "pwm.h"
-#include "gpio.h"
-#include "motor.h"
-#include "car_2wd.h"
+#include <util/delay.h>
+#include <avr/interrupt.h>
 
-Car *car;
+#include "L293.h"
+#include "button.h"
 
-void create(){
 
-	HBridge *leftHBridge = HBRIDGE_create(
-			GPIO_create(&DDRB,&PORTB,&PINB,3),
-			GPIO_create(&DDRB,&PORTB,&PINB,2),
-			GPIO_create(&DDRB,&PORTB,&PINB,1)
-			);
-	Motor *leftMotor = MOTOR_create(leftHBridge,&pwm_0_set);
-	
-	HBridge *rightHBridge = HBRIDGE_create(
-			GPIO_create(&DDRD,&PORTD,&PIND,7),
-			GPIO_create(&DDRD,&PORTD,&PIND,5),
-			GPIO_create(&DDRD,&PORTD,&PIND,6)
-			);
-	Motor *rightMotor = MOTOR_create(rightHBridge,&pwm_2_set);
 
-	car = CAR_create(leftMotor,rightMotor);
-}
+int main(void)
+{
+	L293_init();
+	initButton1();
+	initButton2();
 
-int main() {
-	uart_stdio_Init();
 
-	char key;
-	create();
+	  while(1) {
 
-	while(1){
-		printf("\nEnter command:");
-		key = getchar();
+		  if(button1Pressed() && button2Pressed()) {
+			  stopMotor();
+		  } 
+		  
+		  else if(button1Pressed()) {
+			  motorLeft();
+		  } 
 
-		switch(key){
-		case 'a' :
-			CAR_left(car);
-			break;
-		case 'w':
-			CAR_forward(car);
-			break;
-		case 'd':
-			CAR_right(car);
-			break;
-		case 's':
-			CAR_backward(car);
-			break;
-		case 'p':
-			CAR_start(car);
-			break;
-		case 'l':
-			CAR_stop(car);
-			break;
-		}
-	}
+		  else if(button2Pressed()) {
+			  motorRight();
+		  }
 
-	return 0;
+		  else {
+		      freeMotor();
+		  }
+
+	  }
 }

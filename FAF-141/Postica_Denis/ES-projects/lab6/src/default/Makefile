@@ -1,11 +1,11 @@
 ###############################################################################
-# Makefile for the project lab5
+# Makefile for the project lab6
 ###############################################################################
 
 ## General Flags
-PROJECT = lab5
+PROJECT = lab6
 MCU = atmega32
-TARGET = lab5.elf
+TARGET = lab6.elf
 CC = avr-gcc
 
 CPP = avr-g++
@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -Os -std=gnu99 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -std=gnu99 -DF_CPU=8000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS +=  -Wl,-Map=lab5.map
+LDFLAGS +=  -Wl,-Map=lab6.map
 
 
 ## Intel Hex file production flags
@@ -37,19 +37,22 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = lab5.o timer.o 
+OBJECTS = lab6.o button.o led.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) lab5.hex lab5.eep lab5.lss size
+all: $(TARGET) lab6.hex lab6.eep lab6.lss size
 
 ## Compile
-lab5.o: ../lab5.c
+lab6.o: ../lab6.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-timer.o: ../timer.c
+button.o: ../button.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+led.o: ../led.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -72,7 +75,7 @@ size: ${TARGET}
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) lab5.elf dep/* lab5.hex lab5.eep lab5.lss lab5.map
+	-rm -rf $(OBJECTS) lab6.elf dep/* lab6.hex lab6.eep lab6.lss lab6.map
 
 
 ## Other dependencies
