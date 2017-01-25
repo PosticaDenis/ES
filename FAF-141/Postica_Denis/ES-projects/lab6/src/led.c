@@ -11,17 +11,17 @@ void ledInit(void) {
 
 void ledGoLeft(char leftArrow[]) {
 
-	for(int x=17;x>0;x--) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=17;x>0;x--) // shift values of leftArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
                 {
                     
                     for (int i=0;i<8;i++)
                     {
-                        PORTB = ~PORT[i];    //ground the PORTC pin
+                        PORTB = ~PORT[i];    //ground the PORTB pin
                         PORTA = leftArrow[i+x];  //power the PORTA 
                         _delay_ms(0.5);
-                        PORTB = PORT[i];     //clear pin after 1msec
+                        PORTB = PORT[i];     //clear pin after 0.5 msecs
                     }
                     
                 }
@@ -31,17 +31,17 @@ void ledGoLeft(char leftArrow[]) {
 
 void ledGoRight(char rightArrow[]) {
 
-	for(int x=0;x<18;x++) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=0;x<18;x++) // shift values of rightArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
                 {
                     
                     for (int i=0;i<8;i++)
                     {
-                        PORTB = ~PORT[i];    //ground the PORTC pin
+                        PORTB = ~PORT[i];    //ground the PORTB pin
                         PORTA = rightArrow[i+x];  //power the PORTA 
                         _delay_ms(0.5);
-                        PORTB = PORT[i];     //clear pin after 1msec
+                        PORTB = PORT[i];     //clear pin after 0.5 msecs
                     }
                     
                 }

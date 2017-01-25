@@ -8,6 +8,4 @@ int button1Pressed();
 int button2Pressed();
 
 
-
-
 #endif /* BUTTON_H_ */

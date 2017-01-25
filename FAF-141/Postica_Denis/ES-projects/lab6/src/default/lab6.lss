@@ -133,7 +133,7 @@ int main(void)
 #include "button.h"
 
 void buttonInit() {
-	DDRC &= ~(1 << PORTC0) ;   /* sets direction of DDRB to in (0).*/
+	DDRC &= ~(1 << PORTC0) ;   /* sets direction of DDRC to in (0).*/
   b6:	a0 98       	cbi	0x14, 0	; 20
 }
   b8:	08 95       	ret
@@ -142,7 +142,7 @@ void buttonInit() {
 
 int buttonIsPressed() {
 
-	return PINC & (1<<PORTC0); /* returns the value of PORTA0*/
+	return PINC & (1<<PORTC0); /* returns the value of PORTC0*/
   ba:	23 b3       	in	r18, 0x13	; 19
   bc:	30 e0       	ldi	r19, 0x00	; 0
   be:	21 70       	andi	r18, 0x01	; 1
@@ -179,7 +179,7 @@ void ledGoLeft(char leftArrow[]) {
                     
                     for (int i=0;i<8;i++)
                     {
-                        PORTB = ~PORT[i];    //ground the PORTC pin
+                        PORTB = ~PORT[i];    //ground the PORTB pin
   da:	10 81       	ld	r17, Z
   dc:	10 95       	com	r17
   de:	18 bb       	out	0x18, r17	; 24
@@ -199,10 +199,10 @@ void ledGoLeft(char leftArrow[]) {
   ec:	00 c0       	rjmp	.+0      	; 0xee <ledGoLeft+0x20>
   ee:	00 00       	nop
                         _delay_ms(0.5);
-                        PORTB = PORT[i];     //clear pin after 1msec
+                        PORTB = PORT[i];     //clear pin after 0.5 msecs
   f0:	11 91       	ld	r17, Z+
   f2:	18 bb       	out	0x18, r17	; 24
-	for(int x=17;x>0;x--) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=17;x>0;x--) // shift values of leftArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
                 {
@@ -217,7 +217,7 @@ void ledGoLeft(char leftArrow[]) {
 
 void ledGoLeft(char leftArrow[]) {
 
-	for(int x=17;x>0;x--) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=17;x>0;x--) // shift values of leftArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
  100:	21 f0       	breq	.+8      	; 0x10a <ledGoLeft+0x3c>
@@ -234,7 +234,7 @@ void ledGoLeft(char leftArrow[]) {
  10a:	21 50       	subi	r18, 0x01	; 1
  10c:	30 40       	sbci	r19, 0x00	; 0
 
-	for(int x=17;x>0;x--) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=17;x>0;x--) // shift values of leftArrow[] after each loop execution
  10e:	31 f0       	breq	.+12     	; 0x11c <ledGoLeft+0x4e>
 
 	DDRB = 0xFF; //PORTB as output
@@ -245,7 +245,7 @@ void ledGoLeft(char leftArrow[]) {
  110:	44 e1       	ldi	r20, 0x14	; 20
  112:	50 e0       	ldi	r21, 0x00	; 0
 
-	for(int x=17;x>0;x--) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=17;x>0;x--) // shift values of leftArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
  114:	bc 01       	movw	r22, r24
@@ -270,7 +270,7 @@ void ledGoRight(char rightArrow[]) {
  126:	cf 93       	push	r28
  128:	df 93       	push	r29
 
-	for(int x=0;x<18;x++) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=0;x<18;x++) // shift values of rightArrow[] after each loop execution
  12a:	20 e0       	ldi	r18, 0x00	; 0
  12c:	30 e0       	ldi	r19, 0x00	; 0
  12e:	1d c0       	rjmp	.+58     	; 0x16a <ledGoRight+0x46>
@@ -279,7 +279,7 @@ void ledGoRight(char rightArrow[]) {
                     
                     for (int i=0;i<8;i++)
                     {
-                        PORTB = ~PORT[i];    //ground the PORTC pin
+                        PORTB = ~PORT[i];    //ground the PORTB pin
  130:	10 81       	ld	r17, Z
  132:	10 95       	com	r17
  134:	18 bb       	out	0x18, r17	; 24
@@ -293,10 +293,10 @@ void ledGoRight(char rightArrow[]) {
  142:	00 c0       	rjmp	.+0      	; 0x144 <ledGoRight+0x20>
  144:	00 00       	nop
                         _delay_ms(0.5);
-                        PORTB = PORT[i];     //clear pin after 1msec
+                        PORTB = PORT[i];     //clear pin after 0.5 msecs
  146:	11 91       	ld	r17, Z+
  148:	18 bb       	out	0x18, r17	; 24
-	for(int x=0;x<18;x++) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=0;x<18;x++) // shift values of rightArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
                 {
@@ -311,7 +311,7 @@ void ledGoRight(char rightArrow[]) {
 
 void ledGoRight(char rightArrow[]) {
 
-	for(int x=0;x<18;x++) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=0;x<18;x++) // shift values of rightArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
  156:	21 f0       	breq	.+8      	; 0x160 <ledGoRight+0x3c>
@@ -324,7 +324,7 @@ void ledGoRight(char rightArrow[]) {
 
 void ledGoRight(char rightArrow[]) {
 
-	for(int x=0;x<18;x++) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=0;x<18;x++) // shift values of rightArrow[] after each loop execution
  160:	2f 5f       	subi	r18, 0xFF	; 255
  162:	3f 4f       	sbci	r19, 0xFF	; 255
  164:	22 31       	cpi	r18, 0x12	; 18
@@ -339,7 +339,7 @@ void ledGoRight(char rightArrow[]) {
  16a:	44 e1       	ldi	r20, 0x14	; 20
  16c:	50 e0       	ldi	r21, 0x00	; 0
 
-	for(int x=0;x<18;x++) // there are 142 values in the set of ALPHA to display 'CIRCUIT DIGEST', then shift them after each loop execution
+	for(int x=0;x<18;x++) // shift values of rightArrow[] after each loop execution
         {
             for(int a=0;a<20;a++) //show each character 20 times before shifting a column
  16e:	bc 01       	movw	r22, r24

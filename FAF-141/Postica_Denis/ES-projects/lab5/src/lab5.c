@@ -1,5 +1,3 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
 #include "timer.h"
   
 // TIMER0 overflow interrupt service routine

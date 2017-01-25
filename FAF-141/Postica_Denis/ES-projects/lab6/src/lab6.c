@@ -1,6 +1,3 @@
-#include <avr/io.h>      //IO header
-#define F_CPU 8000000UL //defining crystal frequency
-#include <util/delay.h>  //delay header
 #include "button.h"
 #include "led.h"
 

@@ -1,3 +1,5 @@
+
+
 #include "timer.h"
 
 // initialize timer, interrupt and variable
